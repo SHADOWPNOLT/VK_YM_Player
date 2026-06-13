@@ -1,7 +1,11 @@
 package com.vkym.player.ui.library;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.vkym.player.R;
 import com.vkym.player.data.model.Track;
+import com.vkym.player.media.PlaybackService;
 import com.vkym.player.ui.adapter.TrackAdapter;
-import com.vkym.player.ui.player.FullscreenPlayerActivity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +28,23 @@ public class VKTracksFragment extends Fragment implements TrackAdapter.OnTrackCl
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefresh;
     private TrackAdapter adapter;
+    private PlaybackService playbackService;
+    private boolean isBound = false;
+    
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            PlaybackService.LocalBinder binder = (PlaybackService.LocalBinder) service;
+            playbackService = binder.getService();
+            isBound = true;
+        }
+        
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            playbackService = null;
+            isBound = false;
+        }
+    };
     
     @Nullable
     @Override
@@ -44,14 +65,23 @@ public class VKTracksFragment extends Fragment implements TrackAdapter.OnTrackCl
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         
-        // Добавляем тестовые данные
+        // Тестовые треки с реальными URL для воспроизведения
         List<Track> testTracks = new ArrayList<>();
-        testTracks.add(new Track("1", "vk", "Bohemian Rhapsody", "Queen", 355000, "", ""));
-        testTracks.add(new Track("2", "vk", "Billie Jean", "Michael Jackson", 294000, "", ""));
-        testTracks.add(new Track("3", "vk", "Imagine", "John Lennon", 183000, "", ""));
-        testTracks.add(new Track("4", "vk", "Smells Like Teen Spirit", "Nirvana", 302000, "", ""));
-        testTracks.add(new Track("5", "vk", "Hotel California", "Eagles", 391000, "", ""));
+        Track track1 = new Track("1", "vk", "Test Song 1", "Test Artist", 180000, "", 
+            "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
+        Track track2 = new Track("2", "vk", "Test Song 2", "Test Artist", 210000, "",
+            "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3");
+        Track track3 = new Track("3", "vk", "Test Song 3", "Test Artist", 240000, "",
+            "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3");
+        testTracks.add(track1);
+        testTracks.add(track2);
+        testTracks.add(track3);
         adapter.setTracks(testTracks);
+        
+        // Запуск сервиса
+        Intent intent = new Intent(getContext(), PlaybackService.class);
+        getContext().startService(intent);
+        getContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         
         swipeRefresh.setOnRefreshListener(() -> {
             swipeRefresh.setRefreshing(false);
@@ -61,9 +91,13 @@ public class VKTracksFragment extends Fragment implements TrackAdapter.OnTrackCl
     
     @Override
     public void onTrackClick(Track track, int position) {
-        // Открываем полноэкранный плеер
-        Intent intent = new Intent(getContext(), FullscreenPlayerActivity.class);
-        startActivity(intent);
+        if (isBound && playbackService != null) {
+            List<Track> tracks = adapter.getTracks();
+            playbackService.playQueue(tracks, position);
+            Toast.makeText(getContext(), "Воспроизведение: " + track.title, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "Сервис не готов", Toast.LENGTH_SHORT).show();
+        }
     }
     
     @Override
@@ -90,5 +124,14 @@ public class VKTracksFragment extends Fragment implements TrackAdapter.OnTrackCl
                 }
             })
             .show();
+    }
+    
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (isBound) {
+            getContext().unbindService(serviceConnection);
+            isBound = false;
+        }
     }
 }
