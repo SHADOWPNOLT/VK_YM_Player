@@ -3,10 +3,7 @@ package com.vkym.player.ui.auth;
 import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-<<<<<<< HEAD
 import android.widget.Toast;
-=======
->>>>>>> c006511bfd5d55d547fdcaa98f76665969b25638
 import androidx.appcompat.app.AppCompatActivity;
 import com.vkym.player.R;
 
@@ -20,7 +17,6 @@ public class VKAuthActivity extends AppCompatActivity {
         
         webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
-<<<<<<< HEAD
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -30,9 +26,6 @@ public class VKAuthActivity extends AppCompatActivity {
                 }
             }
         });
-=======
-        webView.setWebViewClient(new WebViewClient());
->>>>>>> c006511bfd5d55d547fdcaa98f76665969b25638
         webView.loadUrl("https://vk.com");
     }
 }
