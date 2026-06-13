@@ -3,33 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-<<<<<<< HEAD
     android:orientation="vertical"
     android:padding="16dp">
 
-=======
-    android:orientation="vertical">
-    
->>>>>>> c006511bfd5d55d547fdcaa98f76665969b25638
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="VK &amp; YM Player"
-<<<<<<< HEAD
         android:textSize="28sp"
         android:textStyle="bold"
         android:textColor="#6200EE" />
 
-=======
-        android:textSize="24sp" />
-    
->>>>>>> c006511bfd5d55d547fdcaa98f76665969b25638
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Build successful!"
-<<<<<<< HEAD
         android:textSize="18sp" />
 
     <Button
@@ -39,8 +28,4 @@
         android:layout_marginTop="32dp"
         android:text="Авторизация VK" />
 
-=======
-        android:textSize="16sp" />
-    
->>>>>>> c006511bfd5d55d547fdcaa98f76665969b25638
 </LinearLayout>
