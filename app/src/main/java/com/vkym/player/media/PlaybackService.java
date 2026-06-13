@@ -5,8 +5,10 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -24,19 +26,6 @@ import java.util.List;
 
 public class PlaybackService extends MediaBrowserServiceCompat {
     
-    public class LocalBinder extends android.os.Binder {
-        public PlaybackService getService() {
-            return PlaybackService.this;
-        }
-    }
-    
-    private final IBinder binder = new LocalBinder();
-    
-    @Override
-    public IBinder onBind(Intent intent) {
-        return binder;
-    }
-    
     public static final String CHANNEL_ID = "PlaybackChannel";
     public static final int NOTIFICATION_ID = 1;
     
@@ -45,6 +34,18 @@ public class PlaybackService extends MediaBrowserServiceCompat {
     private List<Track> currentQueue;
     private int currentIndex = -1;
     private boolean isPlaying = false;
+    private final IBinder binder = new LocalBinder();
+    
+    public class LocalBinder extends Binder {
+        public PlaybackService getService() {
+            return PlaybackService.this;
+        }
+    }
+    
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
+    }
     
     @Override
     public void onCreate() {
@@ -187,6 +188,17 @@ public class PlaybackService extends MediaBrowserServiceCompat {
     
     public ExoPlayer getPlayer() {
         return player;
+    }
+    
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+    
+    public Track getCurrentTrack() {
+        if (currentIndex >= 0 && currentIndex < currentQueue.size()) {
+            return currentQueue.get(currentIndex);
+        }
+        return null;
     }
     
     @Override

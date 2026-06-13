@@ -90,3 +90,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
         }
     }
 }
+    
+    public List<Track> getTracks() {
+        return tracks;
+    }
