@@ -1,23 +1,20 @@
 package com.vkym.player.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.vkym.player.R;
-import com.vkym.player.ui.auth.VKAuthActivity;
 
 public class MainActivity extends AppCompatActivity {
-    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        Button btnVKAuth = findViewById(R.id.btnVKAuth);
-        btnVKAuth.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, VKAuthActivity.class);
-            startActivity(intent);
+        Button btnTest = findViewById(R.id.btnTest);
+        btnTest.setOnClickListener(v -> {
+            Toast.makeText(this, "VK & YM Player работает!", Toast.LENGTH_SHORT).show();
         });
     }
 }

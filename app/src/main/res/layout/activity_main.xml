@@ -22,10 +22,10 @@
         android:textSize="18sp" />
 
     <Button
-        android:id="@+id/btnVKAuth"
+        android:id="@+id/btnTest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Авторизация VK" />
+        android:text="Нажми меня" />
 
 </LinearLayout>
