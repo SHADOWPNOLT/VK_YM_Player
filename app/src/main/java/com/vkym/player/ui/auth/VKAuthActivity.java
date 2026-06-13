@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import com.vkym.player.R;
 import com.vkym.player.di.ServiceLocator;
+import com.vkym.player.utils.SimpleDebug;
 
 public class VKAuthActivity extends AppCompatActivity {
     
@@ -23,62 +24,93 @@ public class VKAuthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vk_auth);
+        SimpleDebug.log("VKAuthActivity onCreate START");
         
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        try {
+            setContentView(R.layout.activity_vk_auth);
+            SimpleDebug.log("setContentView OK");
+            
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+            toolbar.setNavigationOnClickListener(v -> finish());
+            
+            webView = findViewById(R.id.webView);
+            progressBar = findViewById(R.id.progressBar);
+            SimpleDebug.log("Views initialized");
+            
+            setupWebView();
+            loadAuthUrl();
+            SimpleDebug.log("onCreate END");
+            
+        } catch (Exception e) {
+            SimpleDebug.log("VKAuthActivity onCreate ERROR", e);
+            SimpleDebug.showError(this, e.toString());
         }
-        toolbar.setNavigationOnClickListener(v -> finish());
-        
-        webView = findViewById(R.id.webView);
-        progressBar = findViewById(R.id.progressBar);
-        
-        setupWebView();
-        loadAuthUrl();
     }
     
     private void setupWebView() {
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setDomStorageEnabled(true);
-        webView.setWebViewClient(new VKWebViewClient());
-        webView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                if (newProgress < 100) {
-                    progressBar.setVisibility(ProgressBar.VISIBLE);
-                } else {
-                    progressBar.setVisibility(ProgressBar.GONE);
+        try {
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.getSettings().setDomStorageEnabled(true);
+            webView.setWebViewClient(new VKWebViewClient());
+            webView.setWebChromeClient(new WebChromeClient() {
+                @Override
+                public void onProgressChanged(WebView view, int newProgress) {
+                    if (newProgress < 100) {
+                        progressBar.setVisibility(ProgressBar.VISIBLE);
+                    } else {
+                        progressBar.setVisibility(ProgressBar.GONE);
+                    }
                 }
-            }
-        });
+            });
+            SimpleDebug.log("WebView configured");
+        } catch (Exception e) {
+            SimpleDebug.log("setupWebView ERROR", e);
+        }
     }
     
     private void loadAuthUrl() {
-        String authUrl = "https://oauth.vk.com/authorize?" +
-            "client_id=" + VK_CLIENT_ID +
-            "&redirect_uri=" + REDIRECT_URI +
-            "&scope=" + SCOPE +
-            "&response_type=token" +
-            "&v=5.131" +
-            "&display=mobile";
-        
-        webView.loadUrl(authUrl);
+        try {
+            String authUrl = "https://oauth.vk.com/authorize?" +
+                "client_id=" + VK_CLIENT_ID +
+                "&redirect_uri=" + REDIRECT_URI +
+                "&scope=" + SCOPE +
+                "&response_type=token" +
+                "&v=5.131" +
+                "&display=mobile";
+            
+            SimpleDebug.log("Loading URL: " + authUrl);
+            webView.loadUrl(authUrl);
+        } catch (Exception e) {
+            SimpleDebug.log("loadAuthUrl ERROR", e);
+        }
     }
     
     private class VKWebViewClient extends WebViewClient {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
+            SimpleDebug.log("Page finished: " + url);
             
             if (url.contains("access_token=") && url.contains(REDIRECT_URI)) {
+                SimpleDebug.log("Token detected!");
                 extractTokenAndFinish(url);
             }
         }
         
+        @Override
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            super.onReceivedError(view, errorCode, description, failingUrl);
+            SimpleDebug.log("WebView error: " + errorCode + " - " + description);
+            Toast.makeText(VKAuthActivity.this, "Ошибка загрузки: " + description, Toast.LENGTH_SHORT).show();
+        }
+        
         private void extractTokenAndFinish(String url) {
             try {
+                SimpleDebug.log("Extracting token from: " + url);
                 String token = null;
                 String userId = null;
                 
@@ -88,29 +120,28 @@ public class VKAuthActivity extends AppCompatActivity {
                     for (String param : params) {
                         if (param.startsWith("access_token=")) {
                             token = param.substring("access_token=".length());
+                            SimpleDebug.log("Token extracted: " + token.substring(0, Math.min(20, token.length())) + "...");
                         } else if (param.startsWith("user_id=")) {
                             userId = param.substring("user_id=".length());
+                            SimpleDebug.log("User ID: " + userId);
                         }
                     }
                 }
                 
                 if (token != null && !token.isEmpty()) {
                     ServiceLocator.getInstance().getVKApiClient().saveAccessToken(token);
+                    SimpleDebug.log("Token saved successfully");
                     Toast.makeText(VKAuthActivity.this, "Авторизация успешна!", Toast.LENGTH_SHORT).show();
                     setResult(RESULT_OK);
                     finish();
                 } else {
+                    SimpleDebug.log("Token not found in URL");
                     Toast.makeText(VKAuthActivity.this, "Не удалось получить токен", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Toast.makeText(VKAuthActivity.this, "Ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                SimpleDebug.log("extractTokenAndFinish ERROR", e);
+                SimpleDebug.showError(VKAuthActivity.this, e.toString());
             }
-        }
-        
-        @Override
-        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-            super.onReceivedError(view, errorCode, description, failingUrl);
-            Toast.makeText(VKAuthActivity.this, "Ошибка загрузки: " + description, Toast.LENGTH_SHORT).show();
         }
     }
 }
