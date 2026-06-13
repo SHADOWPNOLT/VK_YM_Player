@@ -22,3 +22,13 @@
         app:menu="@menu/bottom_nav_menu" />
     
 </androidx.constraintlayout.widget.ConstraintLayout>
+    
+    <Button
+        android:id="@+id/btnShowLogs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Логи"
+        android:layout_margin="8dp"
+        android:layout_gravity="bottom|end"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />

@@ -113,3 +113,7 @@ public class LibraryFragment extends Fragment {
         }
     }
 }
+    // В начало onCreateView добавить:
+    LogCollector.add("LibraryFragment: onCreateView started");
+    // В конце:
+    LogCollector.add("LibraryFragment: onCreateView completed");

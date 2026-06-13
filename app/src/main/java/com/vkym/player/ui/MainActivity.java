@@ -2,6 +2,7 @@ package com.vkym.player.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,12 @@ public class MainActivity extends AppCompatActivity {
         try {
             Logger.d(TAG + ": onCreate started");
             setContentView(R.layout.activity_main);
+            Button btnLogs = findViewById(R.id.btnShowLogs);
+            if (btnLogs != null) {
+                btnLogs.setOnClickListener(v -> {
+                    startActivity(new Intent(MainActivity.this, LogsActivity.class));
+                });
+            }
             
             bottomNavigationView = findViewById(R.id.bottomNavigation);
             if (bottomNavigationView == null) {
