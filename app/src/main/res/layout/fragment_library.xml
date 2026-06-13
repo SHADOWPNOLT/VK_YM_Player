@@ -3,27 +3,70 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="?attr/colorSurface">
     
-    <Button
-        android:id="@+id/btnVKAuth"
+    <!-- Анимированный градиентный заголовок -->
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="Авторизация VK"
-        android:backgroundTint="#4C75A3" />
+        android:background="?attr/colorPrimary">
+        
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="Моя музыка"
+            app:titleTextColor="@android:color/white"
+            app:titleTextAppearance="@style/TextAppearance.Material3.HeadlineSmall" />
+        
+    </com.google.android.material.appbar.AppBarLayout>
     
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
+    <!-- Кнопки действий -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabMode="fixed"
-        app:tabGravity="fill"/>
+        android:orientation="horizontal"
+        android:padding="16dp">
+        
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAddTrack"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="➕ Добавить"
+            android:layout_marginEnd="8dp"
+            app:icon="@drawable/ic_add"
+            app:iconGravity="textStart" />
+        
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnScanFiles"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="🎵 Сканировать"
+            android:layout_marginStart="8dp"
+            app:icon="@drawable/ic_scan"
+            app:iconGravity="textStart" />
+        
+    </LinearLayout>
     
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager"
+    <!-- Счётчик треков -->
+    <TextView
+        android:id="@+id/tvTrackCount"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="8dp"
+        android:text="0 треков"
+        android:textSize="14sp"
+        android:textColor="@android:color/darker_gray" />
+    
+    <!-- Список треков -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:clipToPadding="false" />
     
 </LinearLayout>

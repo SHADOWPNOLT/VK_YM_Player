@@ -3,8 +3,8 @@
     package="com.vkym.player">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 
     <application
         android:name=".VKYMApplication"
@@ -26,11 +26,6 @@
         <activity
             android:name=".ui.player.FullscreenPlayerActivity"
             android:exported="false" />
-        
-        <activity
-            android:name=".ui.auth.VKAuthActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         
         <activity
             android:name=".ui.LogsActivity"
