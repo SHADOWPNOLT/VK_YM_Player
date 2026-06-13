@@ -20,6 +20,7 @@ public class VKAuthActivity extends AppCompatActivity {
     
     private WebView webView;
     private ProgressBar progressBar;
+    private Toolbar toolbar;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,15 +31,11 @@ public class VKAuthActivity extends AppCompatActivity {
             setContentView(R.layout.activity_vk_auth);
             SimpleDebug.log("setContentView OK");
             
-            // Убираем ActionBar
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().hide();
-            }
-            
-            Toolbar toolbar = findViewById(R.id.toolbar);
+            toolbar = findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setTitle("VK Авторизация");
             }
             toolbar.setNavigationOnClickListener(v -> finish());
             
@@ -110,14 +107,12 @@ public class VKAuthActivity extends AppCompatActivity {
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
             super.onReceivedError(view, errorCode, description, failingUrl);
             SimpleDebug.log("WebView error: " + errorCode + " - " + description);
-            Toast.makeText(VKAuthActivity.this, "Ошибка загрузки: " + description, Toast.LENGTH_SHORT).show();
         }
         
         private void extractTokenAndFinish(String url) {
             try {
                 SimpleDebug.log("Extracting token from: " + url);
                 String token = null;
-                String userId = null;
                 
                 String[] parts = url.split("#");
                 if (parts.length > 1) {
@@ -125,27 +120,20 @@ public class VKAuthActivity extends AppCompatActivity {
                     for (String param : params) {
                         if (param.startsWith("access_token=")) {
                             token = param.substring("access_token=".length());
-                            SimpleDebug.log("Token extracted: " + token.substring(0, Math.min(20, token.length())) + "...");
-                        } else if (param.startsWith("user_id=")) {
-                            userId = param.substring("user_id=".length());
-                            SimpleDebug.log("User ID: " + userId);
+                            SimpleDebug.log("Token extracted");
                         }
                     }
                 }
                 
                 if (token != null && !token.isEmpty()) {
                     ServiceLocator.getInstance().getVKApiClient().saveAccessToken(token);
-                    SimpleDebug.log("Token saved successfully");
+                    SimpleDebug.log("Token saved");
                     Toast.makeText(VKAuthActivity.this, "Авторизация успешна!", Toast.LENGTH_SHORT).show();
                     setResult(RESULT_OK);
                     finish();
-                } else {
-                    SimpleDebug.log("Token not found in URL");
-                    Toast.makeText(VKAuthActivity.this, "Не удалось получить токен", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 SimpleDebug.log("extractTokenAndFinish ERROR", e);
-                SimpleDebug.showError(VKAuthActivity.this, e.toString());
             }
         }
     }

@@ -6,3 +6,7 @@
         <item name="colorAccent">#03DAC5</item>
     </style>
 </resources>
+    <style name="Theme.VKYMPlayer.NoActionBar" parent="Theme.VKYMPlayer">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
