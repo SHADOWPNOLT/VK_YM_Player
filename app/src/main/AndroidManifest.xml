@@ -4,12 +4,14 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".VKYMApplication"
         android:allowBackup="true"
         android:label="VK &amp; YM Player"
-        android:theme="@style/Theme.VKYMPlayer">
+        android:theme="@style/Theme.VKYMPlayer"
+        android:usesCleartextTraffic="true">
         
         <activity
             android:name=".ui.MainActivity"
@@ -25,9 +27,6 @@
             android:name=".ui.player.FullscreenPlayerActivity"
             android:exported="false" />
         
-    </application>
-</manifest>
-        
         <service
             android:name=".media.PlaybackService"
             android:enabled="true"
@@ -37,3 +36,6 @@
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
         </service>
+        
+    </application>
+</manifest>
