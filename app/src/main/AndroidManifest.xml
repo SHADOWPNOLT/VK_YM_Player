@@ -39,3 +39,7 @@
         
     </application>
 </manifest>
+        
+        <activity
+            android:name=".ui.auth.VKAuthActivity"
+            android:exported="false" />
