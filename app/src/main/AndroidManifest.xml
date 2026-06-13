@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".VKYMApplication"
         android:allowBackup="true"
         android:label="VK &amp; YM Player"
         android:theme="@style/Theme.VKYMPlayer">
