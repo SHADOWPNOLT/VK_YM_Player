@@ -28,6 +28,10 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
         notifyDataSetChanged();
     }
     
+    public List<Track> getTracks() {
+        return tracks;
+    }
+    
     public void setOnTrackClickListener(OnTrackClickListener listener) {
         this.listener = listener;
     }
@@ -71,7 +75,6 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
             titleText.setText(track.title);
             artistText.setText(track.artist);
             
-            // Форматирование длительности
             long minutes = track.duration / 60000;
             long seconds = (track.duration % 60000) / 1000;
             durationText.setText(String.format("%d:%02d", minutes, seconds));
@@ -90,7 +93,3 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
         }
     }
 }
-    
-    public List<Track> getTracks() {
-        return tracks;
-    }
