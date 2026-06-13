@@ -101,7 +101,7 @@
                     android:layout_height="48dp"
                     android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_shuffle"
-                    android:alpha="0.5f" />
+                    android:alpha="0.5" />
                 
                 <ImageButton
                     android:id="@+id/prevButton"
@@ -134,7 +134,7 @@
                     android:layout_height="48dp"
                     android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_repeat"
-                    android:alpha="0.5f" />
+                    android:alpha="0.5" />
                 
             </LinearLayout>
             
