@@ -34,7 +34,7 @@ public class FullscreenPlayerActivity extends AppCompatActivity {
     private Handler progressHandler = new Handler();
     private boolean isPlaying = true;
     private int currentProgress = 0;
-    private int totalDuration = 235000; // 3:55 для теста
+    private int totalDuration = 235000;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +46,7 @@ public class FullscreenPlayerActivity extends AppCompatActivity {
         setupRotationAnimation();
         setupSeekBar();
         setupClickListeners();
+        setupEqualizerButton();
         loadTestTrack();
         startProgressUpdate();
     }
@@ -62,6 +63,7 @@ public class FullscreenPlayerActivity extends AppCompatActivity {
         prevButton = findViewById(R.id.prevButton);
         shuffleButton = findViewById(R.id.shuffleButton);
         repeatButton = findViewById(R.id.repeatButton);
+        equalizerButton = findViewById(R.id.equalizerButton);
     }
     
     private void setupToolbar() {
@@ -78,8 +80,6 @@ public class FullscreenPlayerActivity extends AppCompatActivity {
         artistText.setText("Queen");
         durationText.setText("3:55");
         seekBar.setMax(totalDuration);
-        
-        // Заглушка для обложки (можно заменить на реальную)
         coverImage.setImageResource(android.R.drawable.ic_menu_gallery);
     }
     
@@ -184,10 +184,19 @@ public class FullscreenPlayerActivity extends AppCompatActivity {
         });
     }
     
+    private void setupEqualizerButton() {
+        if (equalizerButton != null) {
+            equalizerButton.setOnClickListener(v -> {
+                EqualizerFragment fragment = new EqualizerFragment();
+                fragment.show(getSupportFragmentManager(), "equalizer");
+            });
+        }
+    }
+    
     @Override
     protected void onResume() {
         super.onResume();
-        if (isPlaying) {
+        if (isPlaying && rotationAnimator != null) {
             rotationAnimator.start();
         }
     }
@@ -195,7 +204,9 @@ public class FullscreenPlayerActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        rotationAnimator.pause();
+        if (rotationAnimator != null) {
+            rotationAnimator.pause();
+        }
     }
     
     @Override
@@ -207,13 +218,3 @@ public class FullscreenPlayerActivity extends AppCompatActivity {
         }
     }
 }
-    
-    private void setupEqualizerButton() {
-        equalizerButton = findViewById(R.id.equalizerButton);
-        if (equalizerButton != null) {
-            equalizerButton.setOnClickListener(v -> {
-                EqualizerFragment fragment = new EqualizerFragment();
-                fragment.show(getSupportFragmentManager(), "equalizer");
-            });
-        }
-    }
