@@ -1,7 +1,6 @@
 package com.vkym.player.ui;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
