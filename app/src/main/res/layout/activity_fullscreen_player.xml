@@ -21,6 +21,14 @@
         app:layout_constraintBottom_toBottomOf="parent">
         
         <LinearLayout
+            <ImageButton
+                android:id="@+id/equalizerButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="24dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_equalizer" />
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -61,6 +69,14 @@
                 android:layout_marginTop="8dp" />
             
             <LinearLayout
+            <ImageButton
+                android:id="@+id/equalizerButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="24dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_equalizer" />
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
@@ -87,8 +103,24 @@
                     android:text="0:00" />
                 
             </LinearLayout>
+            <ImageButton
+                android:id="@+id/equalizerButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="24dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_equalizer" />
             
             <LinearLayout
+            <ImageButton
+                android:id="@+id/equalizerButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="24dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_equalizer" />
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -137,7 +169,23 @@
                     android:alpha="0.5" />
                 
             </LinearLayout>
+            <ImageButton
+                android:id="@+id/equalizerButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="24dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_equalizer" />
             
         </LinearLayout>
+            <ImageButton
+                android:id="@+id/equalizerButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="24dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_equalizer" />
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

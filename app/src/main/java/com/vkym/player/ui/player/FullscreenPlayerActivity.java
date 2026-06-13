@@ -28,6 +28,7 @@ public class FullscreenPlayerActivity extends AppCompatActivity {
     private ImageButton prevButton;
     private ImageButton shuffleButton;
     private ImageButton repeatButton;
+    private ImageButton equalizerButton;
     
     private ObjectAnimator rotationAnimator;
     private Handler progressHandler = new Handler();
@@ -206,3 +207,13 @@ public class FullscreenPlayerActivity extends AppCompatActivity {
         }
     }
 }
+    
+    private void setupEqualizerButton() {
+        equalizerButton = findViewById(R.id.equalizerButton);
+        if (equalizerButton != null) {
+            equalizerButton.setOnClickListener(v -> {
+                EqualizerFragment fragment = new EqualizerFragment();
+                fragment.show(getSupportFragmentManager(), "equalizer");
+            });
+        }
+    }
