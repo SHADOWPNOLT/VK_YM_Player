@@ -1,60 +1,68 @@
 package com.vkym.player.ui;
-
 import android.content.Intent;
+
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.vkym.player.R;
-import com.vkym.player.utils.SimpleDebug;
 import com.vkym.player.ui.library.LibraryFragment;
 import com.vkym.player.ui.player.FullscreenPlayerActivity;
 import com.vkym.player.ui.search.SearchFragment;
+import com.vkym.player.utils.SimpleDebug;
 
 public class MainActivity extends AppCompatActivity {
+    
+    private BottomNavigationView bottomNavigationView;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SimpleDebug.log("MainActivity onCreate START");
+        SimpleDebug.log("MainActivity onCreate started");
         
         try {
             setContentView(R.layout.activity_main);
             SimpleDebug.log("setContentView OK");
             
-            Button btnLogs = findViewById(R.id.btnShowLogs);
-            SimpleDebug.log("btnLogs found: " + (btnLogs != null));
+            bottomNavigationView = findViewById(R.id.bottomNavigation);
             
-            if (btnLogs != null) {
-                btnLogs.setOnClickListener(v -> {
-                    SimpleDebug.log("Logs button clicked - trying to open LogsActivity");
-                    try {
-                        Intent intent = new Intent(MainActivity.this, LogsActivity.class);
-                        startActivity(intent);
-                    } catch (Exception e) {
-                        SimpleDebug.log("Error opening LogsActivity", e);
-                        SimpleDebug.showError(MainActivity.this, e.toString());
-                    }
-                });
+            if (savedInstanceState == null) {
+                getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.nav_host_fragment, new LibraryFragment())
+                    .commit();
+                SimpleDebug.log("Initial fragment loaded");
             }
             
-            BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
-            SimpleDebug.log("bottomNav found: " + (bottomNav != null));
+            bottomNavigationView.setOnItemSelectedListener(item -> {
+                int itemId = item.getItemId();
+                Fragment selectedFragment = null;
+                
+                if (itemId == R.id.navigation_library) {
+                    selectedFragment = new LibraryFragment();
+                } else if (itemId == R.id.navigation_search) {
+                    selectedFragment = new SearchFragment();
+                } else if (itemId == R.id.navigation_player) {
+                    startActivity(new Intent(MainActivity.this, FullscreenPlayerActivity.class));
+                    return true;
+                }
+                
+                if (selectedFragment != null) {
+                    getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.nav_host_fragment, selectedFragment)
+                        .commit();
+                }
+                return true;
+            });
             
-            // Загружаем фрагмент
-            getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.nav_host_fragment, new LibraryFragment())
-                .commit();
-            SimpleDebug.log("Fragment loaded");
-            
+            SimpleDebug.log("MainActivity onCreate completed");
         } catch (Exception e) {
-            SimpleDebug.log("CRITICAL ERROR in MainActivity", e);
-            SimpleDebug.showError(this, e.toString());
+            SimpleDebug.log("MainActivity critical error", e);
+            Toast.makeText(this, "Ошибка: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
-        SimpleDebug.log("MainActivity onCreate END");
     }
 }

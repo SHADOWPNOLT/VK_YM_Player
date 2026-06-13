@@ -13,7 +13,7 @@ import com.vkym.player.data.model.Track;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHolder> {
+public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> {
     
     private List<Track> tracks = new ArrayList<>();
     private OnTrackClickListener listener;
@@ -28,26 +28,39 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
         notifyDataSetChanged();
     }
     
-    public List<Track> getTracks() {
-        return tracks;
-    }
-    
     public void setOnTrackClickListener(OnTrackClickListener listener) {
         this.listener = listener;
     }
     
     @NonNull
     @Override
-    public TrackViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.item_track, parent, false);
-        return new TrackViewHolder(view);
+        return new ViewHolder(view);
     }
     
     @Override
-    public void onBindViewHolder(@NonNull TrackViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Track track = tracks.get(position);
-        holder.bind(track, listener);
+        holder.titleText.setText(track.title != null ? track.title : "Unknown");
+        holder.artistText.setText(track.artist != null ? track.artist : "Unknown Artist");
+        
+        long minutes = track.duration / 60000;
+        long seconds = (track.duration % 60000) / 1000;
+        holder.durationText.setText(String.format("%d:%02d", minutes, seconds));
+        
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onTrackClick(track, position);
+            }
+        });
+        
+        holder.menuButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onTrackMenuClick(track, position, v);
+            }
+        });
     }
     
     @Override
@@ -55,41 +68,20 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
         return tracks.size();
     }
     
-    public static class TrackViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView coverImage;
         TextView titleText;
         TextView artistText;
         TextView durationText;
         ImageButton menuButton;
         
-        public TrackViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             coverImage = itemView.findViewById(R.id.coverImage);
             titleText = itemView.findViewById(R.id.titleText);
             artistText = itemView.findViewById(R.id.artistText);
             durationText = itemView.findViewById(R.id.durationText);
             menuButton = itemView.findViewById(R.id.menuButton);
-        }
-        
-        public void bind(Track track, OnTrackClickListener listener) {
-            titleText.setText(track.title);
-            artistText.setText(track.artist);
-            
-            long minutes = track.duration / 60000;
-            long seconds = (track.duration % 60000) / 1000;
-            durationText.setText(String.format("%d:%02d", minutes, seconds));
-            
-            itemView.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onTrackClick(track, getAdapterPosition());
-                }
-            });
-            
-            menuButton.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onTrackMenuClick(track, getAdapterPosition(), v);
-                }
-            });
         }
     }
 }
