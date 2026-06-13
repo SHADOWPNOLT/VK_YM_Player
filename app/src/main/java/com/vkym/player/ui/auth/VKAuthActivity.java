@@ -30,6 +30,11 @@ public class VKAuthActivity extends AppCompatActivity {
             setContentView(R.layout.activity_vk_auth);
             SimpleDebug.log("setContentView OK");
             
+            // Убираем ActionBar
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().hide();
+            }
+            
             Toolbar toolbar = findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             if (getSupportActionBar() != null) {
