@@ -11,7 +11,21 @@ public class VKApiClient {
     private final SharedPreferences securePrefs;
     
     public VKApiClient(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences("vk_prefs", Context.MODE_PRIVATE);
+        SharedPreferences prefs = null;
+        try {
+            String masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC);
+            prefs = EncryptedSharedPreferences.create(
+                "vk_secure_prefs",
+                masterKeyAlias,
+                context,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            );
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+            // Fallback to regular prefs if encryption fails
+            prefs = context.getSharedPreferences("vk_secure_prefs_fallback", Context.MODE_PRIVATE);
+        }
         this.securePrefs = prefs;
     }
     
