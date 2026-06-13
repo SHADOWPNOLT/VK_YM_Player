@@ -7,7 +7,6 @@ import android.webkit.WebChromeClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import com.vkym.player.R;
 import com.vkym.player.di.ServiceLocator;
 import com.vkym.player.utils.SimpleDebug;
@@ -20,7 +19,6 @@ public class VKAuthActivity extends AppCompatActivity {
     
     private WebView webView;
     private ProgressBar progressBar;
-    private Toolbar toolbar;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,16 +26,8 @@ public class VKAuthActivity extends AppCompatActivity {
         SimpleDebug.log("VKAuthActivity onCreate START");
         
         try {
-            setContentView(R.layout.activity_vk_auth);
+            setContentView(R.layout.activity_vk_auth_simple);
             SimpleDebug.log("setContentView OK");
-            
-            toolbar = findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setTitle("VK Авторизация");
-            }
-            toolbar.setNavigationOnClickListener(v -> finish());
             
             webView = findViewById(R.id.webView);
             progressBar = findViewById(R.id.progressBar);
@@ -131,6 +121,8 @@ public class VKAuthActivity extends AppCompatActivity {
                     Toast.makeText(VKAuthActivity.this, "Авторизация успешна!", Toast.LENGTH_SHORT).show();
                     setResult(RESULT_OK);
                     finish();
+                } else {
+                    SimpleDebug.log("Token not found in URL");
                 }
             } catch (Exception e) {
                 SimpleDebug.log("extractTokenAndFinish ERROR", e);
