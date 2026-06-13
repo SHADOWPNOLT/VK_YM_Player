@@ -9,81 +9,52 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.vkym.player.R;
-import com.vkym.player.utils.LogCollector;
+import com.vkym.player.utils.SimpleDebug;
 import com.vkym.player.ui.library.LibraryFragment;
 import com.vkym.player.ui.player.FullscreenPlayerActivity;
 import com.vkym.player.ui.search.SearchFragment;
 
 public class MainActivity extends AppCompatActivity {
     
-    private static final String TAG = "MainActivity";
-    private BottomNavigationView bottomNavigationView;
-    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LogCollector.add(TAG + ": onCreate started");
+        SimpleDebug.log("MainActivity onCreate START");
         
         try {
             setContentView(R.layout.activity_main);
+            SimpleDebug.log("setContentView OK");
             
-            // Кнопка логов
             Button btnLogs = findViewById(R.id.btnShowLogs);
+            SimpleDebug.log("btnLogs found: " + (btnLogs != null));
+            
             if (btnLogs != null) {
                 btnLogs.setOnClickListener(v -> {
-                    LogCollector.add(TAG + ": Logs button clicked");
-                    startActivity(new Intent(MainActivity.this, LogsActivity.class));
+                    SimpleDebug.log("Logs button clicked - trying to open LogsActivity");
+                    try {
+                        Intent intent = new Intent(MainActivity.this, LogsActivity.class);
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        SimpleDebug.log("Error opening LogsActivity", e);
+                        SimpleDebug.showError(MainActivity.this, e.toString());
+                    }
                 });
             }
             
-            bottomNavigationView = findViewById(R.id.bottomNavigation);
-            if (bottomNavigationView == null) {
-                LogCollector.add(TAG + ": bottomNavigationView is null!");
-                return;
-            }
+            BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
+            SimpleDebug.log("bottomNav found: " + (bottomNav != null));
             
-            // Загружаем библиотеку по умолчанию
-            try {
-                getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.nav_host_fragment, new LibraryFragment())
-                    .commit();
-                LogCollector.add(TAG + ": Initial fragment loaded");
-            } catch (Exception e) {
-                LogCollector.add(TAG + ": Error loading initial fragment", e);
-            }
+            // Загружаем фрагмент
+            getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.nav_host_fragment, new LibraryFragment())
+                .commit();
+            SimpleDebug.log("Fragment loaded");
             
-            bottomNavigationView.setOnItemSelectedListener(item -> {
-                try {
-                    int itemId = item.getItemId();
-                    LogCollector.add(TAG + ": Navigation clicked - " + itemId);
-                    
-                    if (itemId == R.id.navigation_library) {
-                        getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.nav_host_fragment, new LibraryFragment())
-                            .commit();
-                        return true;
-                    } else if (itemId == R.id.navigation_search) {
-                        getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.nav_host_fragment, new SearchFragment())
-                            .commit();
-                        return true;
-                    } else if (itemId == R.id.navigation_player) {
-                        Intent intent = new Intent(MainActivity.this, FullscreenPlayerActivity.class);
-                        startActivity(intent);
-                        return true;
-                    }
-                } catch (Exception e) {
-                    LogCollector.add(TAG + ": Navigation error", e);
-                }
-                return false;
-            });
-            
-            LogCollector.add(TAG + ": onCreate completed successfully");
         } catch (Exception e) {
-            LogCollector.add(TAG + ": Critical error in onCreate", e);
+            SimpleDebug.log("CRITICAL ERROR in MainActivity", e);
+            SimpleDebug.showError(this, e.toString());
         }
+        SimpleDebug.log("MainActivity onCreate END");
     }
 }
