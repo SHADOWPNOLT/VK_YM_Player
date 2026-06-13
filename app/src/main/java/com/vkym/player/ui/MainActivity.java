@@ -1,20 +1,38 @@
 package com.vkym.player.ui;
 
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.vkym.player.R;
 
 public class MainActivity extends AppCompatActivity {
+    
+    private NavController navController;
+    private BottomNavigationView bottomNavigationView;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        Button btnTest = findViewById(R.id.btnTest);
-        btnTest.setOnClickListener(v -> {
-            Toast.makeText(this, "VK & YM Player работает!", Toast.LENGTH_SHORT).show();
-        });
+        bottomNavigationView = findViewById(R.id.bottomNavigation);
+        
+        NavHostFragment navHostFragment = (NavHostFragment) 
+            getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        if (navHostFragment != null) {
+            navController = navHostFragment.getNavController();
+            
+            AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_library,
+                R.id.navigation_search,
+                R.id.navigation_player
+            ).build();
+            
+            NavigationUI.setupWithNavController(bottomNavigationView, navController);
+        }
     }
 }
