@@ -1,5 +1,6 @@
 package com.vkym.player.ui.library;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.vkym.player.R;
 import com.vkym.player.data.model.Track;
 import com.vkym.player.ui.adapter.TrackAdapter;
+import com.vkym.player.ui.player.FullscreenPlayerActivity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,10 +46,11 @@ public class VKTracksFragment extends Fragment implements TrackAdapter.OnTrackCl
         
         // Добавляем тестовые данные
         List<Track> testTracks = new ArrayList<>();
-        Track track1 = new Track("1", "vk", "Test Song 1", "Test Artist 1", 180000, "", "");
-        Track track2 = new Track("2", "vk", "Test Song 2", "Test Artist 2", 210000, "", "");
-        testTracks.add(track1);
-        testTracks.add(track2);
+        testTracks.add(new Track("1", "vk", "Bohemian Rhapsody", "Queen", 355000, "", ""));
+        testTracks.add(new Track("2", "vk", "Billie Jean", "Michael Jackson", 294000, "", ""));
+        testTracks.add(new Track("3", "vk", "Imagine", "John Lennon", 183000, "", ""));
+        testTracks.add(new Track("4", "vk", "Smells Like Teen Spirit", "Nirvana", 302000, "", ""));
+        testTracks.add(new Track("5", "vk", "Hotel California", "Eagles", 391000, "", ""));
         adapter.setTracks(testTracks);
         
         swipeRefresh.setOnRefreshListener(() -> {
@@ -58,7 +61,9 @@ public class VKTracksFragment extends Fragment implements TrackAdapter.OnTrackCl
     
     @Override
     public void onTrackClick(Track track, int position) {
-        Toast.makeText(getContext(), "Playing: " + track.title, Toast.LENGTH_SHORT).show();
+        // Открываем полноэкранный плеер
+        Intent intent = new Intent(getContext(), FullscreenPlayerActivity.class);
+        startActivity(intent);
     }
     
     @Override
