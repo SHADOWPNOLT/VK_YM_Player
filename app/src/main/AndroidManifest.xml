@@ -27,6 +27,10 @@
             android:name=".ui.player.FullscreenPlayerActivity"
             android:exported="false" />
         
+        <activity
+            android:name=".ui.auth.VKAuthActivity"
+            android:exported="false" />
+        
         <service
             android:name=".media.PlaybackService"
             android:enabled="true"
@@ -39,7 +43,3 @@
         
     </application>
 </manifest>
-        
-        <activity
-            android:name=".ui.auth.VKAuthActivity"
-            android:exported="false" />
